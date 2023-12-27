@@ -1,0 +1,42 @@
+
+body {
+    font-size: 13px;
+}
+
+.bg-dark-blue {
+    background-color: #002060 !important;
+    color: white !important;
+}
+.bg-gradient-dark-blue {
+    background: linear-gradient(#4468af, #002060);
+}
+
+.border-dark-blue {
+    border-color: #002060;
+}
+
+.table-striped-green > tbody > tr:nth-child(odd) > td, 
+.table-striped-green > tbody > tr:nth-child(odd) > th {
+    background-color: #b4c6e7;
+}
+
+.table-custom-padding > tbody > tr > td {
+    padding-top: 1px;
+    padding-bottom: 1px;
+}
+
+.selected-number {
+    background: linear-gradient(#355f23, #13dc2a) !important;
+    color: white !important;
+}
+
+.bg-light-green {
+    background: #a9d08e !important;
+}
+.bg-gradient-light-green {
+    background: linear-gradient(#a1d780, #537f34);
+}
+
+.border-light-green {
+    border-color: #537f34;
+}
