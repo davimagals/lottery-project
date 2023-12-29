@@ -122,6 +122,16 @@ function buildCell(text = '', classList = []) {
 
 // DAVI: Calcular os números marcados.
 function calculateScoredNumbers(data) {
+    let allSelectedNumbers = []
+
+    
+    console.dir(data)
+}
+
+
+
+// Principal.
+function main(data) {
     // Mostrar sorteios.
     showDraws(data.draws)
 
@@ -129,5 +139,6 @@ function calculateScoredNumbers(data) {
     showTickets(data.players)
 
     // Calcular os números marcados.
+    calculateScoredNumbers(data)
 }
-calculateScoredNumbers(data)
+main(data)
