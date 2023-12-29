@@ -40,3 +40,7 @@ body {
 .border-light-green {
     border-color: #537f34;
 }
+
+.cursor-pointer {
+    cursor: pointer;
+}

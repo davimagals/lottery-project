@@ -1,36 +1,6 @@
 
-// Dados.
-let data = {
-    players: [
-        {
-            name: 'Pedrinho Marruás',
-            ticket: [1, 2, 3, 4, 5, 7, 9, 21, 22, 37, 41, 54, 65, 66, 68, 73, 74, 76, 77, 78]
-        },
-        {
-            name: 'Wendel',
-            ticket: [4, 5, 7, 8, 9, 13, 19, 20, 23, 27, 36, 37, 39, 46, 56, 64, 73, 76, 77, 80]
-        }
-    ],
-    draws: [
-        {
-            id: 5313,
-            date: '2020-07-14',
-            numbers: [4, 37, 56, 66, 73]
-        },
-        {
-            id: 5314,
-            date: '2020-07-15',
-            numbers: [4, 7, 34, 45, 74]
-        },
-        {
-            id: 5315,
-            date: '2020-07-16',
-            numbers: [1, 2, 3, 5, 9]
-        }
-    ]
-}
-
-
+// Modal: player.
+let modalPlayer = null
 
 // Mostrar bilhetes.
 function showTickets(players) {
@@ -40,6 +10,7 @@ function showTickets(players) {
     players.forEach((player, i) => {
         // Linha.
         let tr = document.createElement('tr')
+        tr.classList.add('cursor-pointer')
         tr.dataset.id = i
 
         // ID.
@@ -62,6 +33,9 @@ function showTickets(players) {
         // Pontos.
         const tdScore = buildCell('', ['bg-dark-blue', 'text-center'])
         tr.appendChild(tdScore)
+
+        // Evento: clique.
+        tr.addEventListener('click', showModalPlayer)
 
         tbodyTickets.appendChild(tr)
     })
@@ -120,12 +94,72 @@ function buildCell(text = '', classList = []) {
 
 
 
-// DAVI: Calcular os números marcados.
+// Calcular os números marcados.
 function calculateScoredNumbers(data) {
     let allSelectedNumbers = []
 
+    // Concatenar os números sorteados e remover os repetidos em diferentes sorteios.
+    for (let draw of data.draws) {
+        allSelectedNumbers = allSelectedNumbers.concat(draw.numbers)
+    }
+    allSelectedNumbers = [...new Set(allSelectedNumbers)]
+
+    // Marcar nas cartelas.
+    let tbodyTickets = document.querySelector('#tickets')
+
+    for (let num of allSelectedNumbers) {
+        let tdNumbers = tbodyTickets.querySelectorAll(`td[data-value='${num}']`)
+
+        for (let tdNum of tdNumbers) {
+            tdNum.classList.add('selected-number')
+        }
+    }
+
+    // Contar os pontos.
+    let trPlayers = tbodyTickets.querySelectorAll('tr')
+
+    for(let trPlayer of trPlayers) {
+        let tdSelecteds = trPlayer.querySelectorAll('.selected-number')
+        let tdScore = trPlayer.querySelector('.bg-dark-blue')
+
+        const score = tdSelecteds.length
+        let textCount = document.createTextNode(score)
+        tdScore.appendChild(textCount)
+        trPlayer.dataset.score = score
+    }
+}
+
+
+
+// Mostrar modal apostador.
+function showModalPlayer(event) {
+    const idPlayer = event.target.parentElement.dataset.id
+
+    let player = null
+    if (idPlayer) {
+        player = data.players[idPlayer]
+    } else {
+        player = {
+            name: '',
+            ticket: []
+        }
+    }
+
+    // Nome.
+    const inputName = document.querySelector('#inputName')
+    inputName.value = player.name
+
+    // Números.
+
+    modalPlayer = new bootstrap.Modal('#modalPlayer')
+    modalPlayer.show()
+}
+
+// DAVI: Montar ticket do modal apostador.
+function buildTicket() {
+    const tableTicket = document.querySelector('#tableTicket')
+
     
-    console.dir(data)
 }
 
 
