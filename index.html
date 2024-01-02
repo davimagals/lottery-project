@@ -132,6 +132,8 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
+                    <input id="inputId" type="hidden" />
+
                     <div class="mb-3">
                         <label for="inputName" class="form-label fs-6">Nome</label>
                         <input type="text" class="form-control" id="inputName" required>
@@ -139,25 +141,28 @@
 
                     <div class="mb-3">
                         <label for="inputName" class="form-label fs-6">Números</label>
-                        <table id="tableTicket" class="table table-bordered">
-                            <tr>
-                                <td data-value="1" class="p-1 text-center">01</td>
-                                <td data-value="2" class="p-1 text-center">02</td>
-                                <td data-value="3" class="p-1 text-center">03</td>
-                                <td data-value="4" class="p-1 text-center">04</td>
-                                <td data-value="5" class="p-1 text-center">05</td>
-                                <td data-value="6" class="p-1 text-center">06</td>
-                                <td data-value="7" class="p-1 text-center">07</td>
-                                <td data-value="8" class="p-1 text-center">08</td>
-                                <td data-value="9" class="p-1 text-center">09</td>
-                                <td data-value="10" class="p-1 text-center">10</td>
-                            </tr>
+                        <table class="table table-bordered cursor-pointer">
+                            <tbody id="tbodyTicket">
+                                <!-- <tr>
+                                    <td data-value="1" class="p-1 text-center">01</td>
+                                    <td data-value="2" class="p-1 text-center">02</td>
+                                    <td data-value="3" class="p-1 text-center">03</td>
+                                    <td data-value="4" class="p-1 text-center">04</td>
+                                    <td data-value="5" class="p-1 text-center">05</td>
+                                    <td data-value="6" class="p-1 text-center">06</td>
+                                    <td data-value="7" class="p-1 text-center">07</td>
+                                    <td data-value="8" class="p-1 text-center">08</td>
+                                    <td data-value="9" class="p-1 text-center">09</td>
+                                    <td data-value="10" class="p-1 text-center">10</td>
+                                </tr> -->
+                            </tbody>
                         </table>
                     </div>
                 </div>
                 <div class="modal-footer">
+                    <button id="btnDelete" type="button" class="btn btn-danger" onclick="deletePlayer()">Apagar</button>
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
-                    <button type="button" class="btn btn-primary">Salvar</button>
+                    <button type="button" class="btn btn-primary" onclick="savePlayer()">Salvar</button>
                 </div>
             </div>
         </div>

@@ -3,11 +3,11 @@
 let modalPlayer = null
 
 // Mostrar bilhetes.
-function showTickets(players) {
+function showTickets() {
     let tbodyTickets = document.querySelector('#tickets')
     tbodyTickets.innerHTML = ''
 
-    players.forEach((player, i) => {
+    data.players.forEach((player, i) => {
         // Linha.
         let tr = document.createElement('tr')
         tr.classList.add('cursor-pointer')
@@ -44,11 +44,11 @@ function showTickets(players) {
 
 
 // Mostrar sorteios.
-function showDraws(draws) {
+function showDraws() {
     let tbodyDraws = document.querySelector('#draws')
     tbodyDraws.innerHTML = ''
 
-    draws.forEach((draw, i) => {
+    data.draws.forEach((draw, i) => {
         // Linha.
         let tr = document.createElement('tr')
         tr.dataset.id = i
@@ -75,7 +75,7 @@ function showDraws(draws) {
     let drawsCount = document.querySelector('#drawsCount')
     drawsCount.innerHTML = ''
 
-    const textCount = document.createTextNode(draws.length)
+    const textCount = document.createTextNode(data.draws.length)
     drawsCount.appendChild(textCount)
 }
 
@@ -95,7 +95,7 @@ function buildCell(text = '', classList = []) {
 
 
 // Calcular os números marcados.
-function calculateScoredNumbers(data) {
+function calculateScoredNumbers() {
     let allSelectedNumbers = []
 
     // Concatenar os números sorteados e remover os repetidos em diferentes sorteios.
@@ -145,34 +145,134 @@ function showModalPlayer(event) {
         }
     }
 
+    // ID.
+    const inputId = document.querySelector('#inputId')
+    inputId.value = idPlayer
+
     // Nome.
     const inputName = document.querySelector('#inputName')
     inputName.value = player.name
 
     // Números.
+    buildTicket()
+    const tbodyTicket = document.querySelector('#tbodyTicket')
+    for (let num of player.ticket) {
+        const td = tbodyTicket.querySelector(`td[data-value='${num}']`)
+        td.classList.add('bg-dark-blue')
+    }
 
+    // Botão 'Apagar'.
+    const btnDelete = document.querySelector('#btnDelete')
+    btnDelete.classList.remove(idPlayer ? 'd-none' : 'd-block')
+    btnDelete.classList.add(idPlayer ? 'd-block' : 'd-none')
+
+    // Mostrar modal.
     modalPlayer = new bootstrap.Modal('#modalPlayer')
     modalPlayer.show()
 }
 
-// DAVI: Montar ticket do modal apostador.
+// Montar ticket do modal apostador.
 function buildTicket() {
-    const tableTicket = document.querySelector('#tableTicket')
+    const tbodyTicket = document.querySelector('#tbodyTicket')
+    tbodyTicket.innerHTML = ''
 
+    for (let i = 0; i < 80; i++) {
+        // Novo TR.
+        const isNewTr = ((i % 10 == 0) ? true : false)
+        if(isNewTr) {
+            let newTr = document.createElement('tr')
+            tbodyTicket.appendChild(newTr)
+        }
+
+        // Adicionando TD.
+        const tr = tbodyTicket.querySelector('tr:last-child')
+        const num = i + 1
+
+        // DAVI: usar buildCell
+        const newTd = document.createElement('td')
+        newTd.classList.add(...['p-1', 'text-center'])
+        newTd.dataset.value = num
+        newTd.addEventListener('click', selectTicketNum)
+
+        const newTdText = document.createTextNode(num < 10 ? '0'+ num : num)
+        newTd.appendChild(newTdText)
+        tr.appendChild(newTd)
+    }
+}
+
+// Selecionar número no ticket do modal apostador.
+function selectTicketNum(event) {
+    const td = event.target
+    td.classList.toggle('bg-dark-blue')
+}
+
+
+
+// Salvar um apostador.
+function savePlayer() {
+    const player = {
+        name: '',
+        ticket: []
+    }
+
+    // ID.
+    const inputId = document.querySelector('#inputId')
+    const idPlayer = inputId.value
+
+    // Nome.
+    const inputName = document.querySelector('#inputName')
+    player.name = inputName.value
+
+    // Números.
+    const tbodyTicket = document.querySelector('#tbodyTicket')
+    const tdSelecteds = tbodyTicket.querySelectorAll('.bg-dark-blue')
+    for (let tdSelected of tdSelecteds) {
+        player.ticket.push(parseInt(tdSelected.dataset.value))
+    }
+
+    // Verificar.
+    if (player.name.trim() == '' || player.ticket.length != 20) {
+        alert('Preencha um nome e 20 números!')
+        return
+    }
+
+    // Salvar.
+    if (idPlayer) {
+        data.players[idPlayer] = player
+    } else {
+        data.players.push(player)
+    }
+
+    modalPlayer.hide()
+    main()
+}
+
+
+
+// Apagar player.
+function deletePlayer() {
+    const inputId = document.querySelector('#inputId')
+    const idPlayer = inputId.value
     
+    data.players.splice(idPlayer, 1)
+
+    modalPlayer.hide()
+    main()
 }
 
 
 
 // Principal.
-function main(data) {
+function main() {
     // Mostrar sorteios.
-    showDraws(data.draws)
+    showDraws()
 
     // Mostrar cartelas.
-    showTickets(data.players)
+    showTickets()
 
     // Calcular os números marcados.
-    calculateScoredNumbers(data)
+    calculateScoredNumbers()
 }
-main(data)
+main()
+
+// DAVI: classificação geral; pdf...
