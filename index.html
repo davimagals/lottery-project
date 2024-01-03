@@ -15,32 +15,13 @@
             <div class="col-xl-9 mb-3">
 
                 <div class="row bg-dark-blue">
-                    <div class="col-md-3 py-3">
-                        <button type="button" class="btn btn-primary text-uppercase bg-gradient-dark-blue border-dark-blue fw-semibold fst-italic">
-                            Classificação Geral
-                        </button>
-                    </div>
-        
-                    <div class="col-md-2 py-3">
-                        <button type="button" class="btn btn-primary text-uppercase bg-gradient-dark-blue border-dark-blue fw-semibold fst-italic">
-                            Planilha PDF
-                        </button>
-                    </div>
-        
-                    <div class="col-md-4 py-3">
+                    <div class="col-md-12 py-3">
                         <h1 class="mb-0 text-uppercase fst-italic text-center">
                             Baú da Quina
                         </h1>
                     </div>
-        
-                    <div class="col-md-3 py-3">
-                        <button type="button" class="btn btn-primary text-uppercase bg-gradient-dark-blue border-dark-blue fw-semibold fst-italic" disabled>
-                            Classificação Pontos
-                        </button>
-                    </div>
 
-                    <div class="col-12 ">
-
+                    <div class="col-12">
                         <div class="table-responsive">
                             <table class="table table-striped-green table-custom-padding table-bordered border-dark-subtle mb-0">
                                 <thead>
@@ -64,13 +45,20 @@
                                 </tbody>
                             </table>
                         </div>
-
                     </div>
 
-                    <div class="col-md-4 py-3">
+                    <div class="col-6 py-3">
                         <div data-id="">
-                            <button onclick="showModalPlayer(event)" type="button" class="btn btn-primary text-uppercase bg-gradient-dark-blue border-dark-blue fw-semibold fst-italic">
-                                Adicionar apostador
+                            <button onclick="showModalPlayer(event)" type="button" class="btn btn-primary text-uppercase bg-gradient-dark-blue border-dark-blue fw-semibold fst-italic" title="Adicionar novo apostador">
+                                + apostador
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="col-6 py-3">
+                        <div class="d-grid justify-content-end">
+                            <button type="button" class="btn btn-primary text-uppercase bg-gradient-dark-blue border-dark-blue fw-semibold fst-italic" title="Apagar todos os apostadores" data-bs-toggle="modal" data-bs-target="#modalDelAllPlayers">
+                                Limpar Apostadores
                             </button>
                         </div>
                     </div>
@@ -82,19 +70,15 @@
             <div class="col-xl-3">
 
                 <div class="row bg-light-green">
+                    <div class="col-12 py-3">
+                        <h1 class="text-uppercase fst-italic text-center text-black mb-0">
+                            Sorteios
+                        </h1>
+                    </div>
+
                     <div class="col-12">
-                        <p class="bg-black text-white text-uppercase text-center fst-italic mt-2">
-                            Total de resultados sorteados &rarr; <span id="drawsCount"></span>
-                        </p>
-
-                        <div class="d-grid mx-auto mb-4">
-                            <button type="button" class="btn btn-success bg-gradient-light-green border-light-green text-uppercase fw-semibold fst-italic mx-auto">
-                                Limpar Resultados
-                            </button>
-                        </div>
-
                         <div class="table-responsive">
-                            <table class="table table-custom-padding table-bordered border-dark-subtle">
+                            <table class="table table-custom-padding table-bordered border-dark-subtle mb-0">
                                 <thead>
                                     <tr>
                                         <th class="bg-dark-blue text-center text-uppercase fst-italic">
@@ -109,9 +93,30 @@
                                     </tr>
                                 </thead>
         
-                                <tbody id="draws" class="fw-semibold fst-italic">
-                                </tbody>
+                                <tbody id="draws" class="fw-semibold fst-italic"></tbody>
                             </table>
+                        </div>
+
+                        <!--
+                        <p class="bg-black text-white text-uppercase text-center fst-italic mt-2">
+                            Total de resultados sorteados &rarr; <span id="drawsCount"></span>
+                        </p>
+                        -->
+
+                        <div class="row">
+                            <div class="col-5 py-3">
+                                <button type="button" class="btn btn-success bg-gradient-light-green border-light-green text-uppercase fw-semibold fst-italic mx-auto" title="Adicionar novo sorteio">
+                                    + Sorteio
+                                </button>
+                            </div>
+
+                            <div class="col-7 py-3">
+                                <div class="d-grid justify-content-end">
+                                    <button type="button" class="btn btn-success bg-gradient-light-green border-light-green text-uppercase fw-semibold fst-italic mx-auto" title="Apagar todos os sorteios">
+                                        Limpar Sorteios
+                                    </button>
+                                </div>
+                            </div>
                         </div>
 
                     </div>
@@ -123,7 +128,7 @@
 
 
 
-    <!-- Modal: Apostador -->
+    <!-- Modal: + apostador -->
     <div id="modalPlayer" class="modal" tabindex="-1">
         <div class="modal-dialog modal-sm">
             <div class="modal-content">
@@ -160,14 +165,56 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button id="btnDelete" type="button" class="btn btn-danger" onclick="deletePlayer()">Apagar</button>
+                    <button id="btnDelete" type="button" class="btn btn-danger" data-bs-target="#modalDelPlayer" data-bs-toggle="modal">Apagar</button>
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
                     <button type="button" class="btn btn-primary" onclick="savePlayer()">Salvar</button>
                 </div>
             </div>
         </div>
     </div>
-    <!-- / Modal: Apostador -->
+    <!-- / Modal: + apostador -->
+
+    <!-- Modal: apagar um apostador -->
+    <div id="modalDelPlayer" class="modal" tabindex="-1">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <div class="modal-body">
+                    <h3 class="text-center text-danger">Apagar apostador</h3>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal" onclick="deletePlayer()">Confirmar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- / Modal: apagar um apostador -->
+
+    <!-- Modal: limpar apostadores -->
+    <div id="modalDelAllPlayers" class="modal" tabindex="-1">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <div class="modal-body">
+                    <h3 class="text-center text-danger">Limpar apostadores</h3>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal" onclick="deleteAllPlayers()">Confirmar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- / Modal: limpar apostadores -->
 
 
 

@@ -7,7 +7,10 @@ function showTickets() {
     let tbodyTickets = document.querySelector('#tickets')
     tbodyTickets.innerHTML = ''
 
-    data.players.forEach((player, i) => {
+    // Ordenar por pontos.
+    const players = sortByPoints(data.players)
+
+    players.forEach((player, i) => {
         // Linha.
         let tr = document.createElement('tr')
         tr.classList.add('cursor-pointer')
@@ -41,6 +44,26 @@ function showTickets() {
     })
 }
 
+// Ordenar bilhetes ascendente por pontos.
+function sortByPoints(players) {
+    let allSelectedNumbers = []
+
+    // Concatenar os números sorteados e remover os repetidos em diferentes sorteios.
+    for (let draw of data.draws) {
+        allSelectedNumbers = allSelectedNumbers.concat(draw.numbers)
+    }
+    allSelectedNumbers = [...new Set(allSelectedNumbers)]
+
+    // Ordenar.
+    players.sort(function(a, b) {
+        const countA = a.ticket.filter(x => allSelectedNumbers.includes(x))
+        const countB = b.ticket.filter(x => allSelectedNumbers.includes(x))
+        return countB.length - countA.length
+    })
+
+    return players
+}
+
 
 
 // Mostrar sorteios.
@@ -72,11 +95,13 @@ function showDraws() {
     })
 
     // Contador de sorteios.
+    /*
     let drawsCount = document.querySelector('#drawsCount')
     drawsCount.innerHTML = ''
 
     const textCount = document.createTextNode(data.draws.length)
     drawsCount.appendChild(textCount)
+    */
 }
 
 
@@ -249,14 +274,18 @@ function savePlayer() {
 
 
 
-// Apagar player.
+// Apagar apostador.
 function deletePlayer() {
     const inputId = document.querySelector('#inputId')
     const idPlayer = inputId.value
     
     data.players.splice(idPlayer, 1)
+    main()
+}
 
-    modalPlayer.hide()
+// Apagar todos os apostadores.
+function deleteAllPlayers() {
+    data.players = []
     main()
 }
 
