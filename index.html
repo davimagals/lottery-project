@@ -50,7 +50,7 @@
                     <div class="col-6 py-3">
                         <div data-id="">
                             <button onclick="showModalPlayer(event)" type="button" class="btn btn-primary text-uppercase bg-gradient-dark-blue border-dark-blue fw-semibold fst-italic" title="Adicionar novo apostador">
-                                + apostador
+                                + Apostador
                             </button>
                         </div>
                     </div>
@@ -105,14 +105,16 @@
 
                         <div class="row">
                             <div class="col-5 py-3">
-                                <button type="button" class="btn btn-success bg-gradient-light-green border-light-green text-uppercase fw-semibold fst-italic mx-auto" title="Adicionar novo sorteio">
-                                    + Sorteio
-                                </button>
+                                <div data-id="">
+                                    <button onclick="showModalDraw(event)" type="button" class="btn btn-success bg-gradient-light-green border-light-green text-uppercase fw-semibold fst-italic mx-auto" title="Adicionar novo sorteio">
+                                        + Sorteio
+                                    </button>
+                                </div>
                             </div>
 
                             <div class="col-7 py-3">
                                 <div class="d-grid justify-content-end">
-                                    <button type="button" class="btn btn-success bg-gradient-light-green border-light-green text-uppercase fw-semibold fst-italic mx-auto" title="Apagar todos os sorteios">
+                                    <button type="button" class="btn btn-success bg-gradient-light-green border-light-green text-uppercase fw-semibold fst-italic mx-auto" title="Apagar todos os sorteios"  data-bs-toggle="modal" data-bs-target="#modalDelAllDraws">
                                         Limpar Sorteios
                                     </button>
                                 </div>
@@ -137,7 +139,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <input id="inputId" type="hidden" />
+                    <input id="inputPlayerId" type="hidden" />
 
                     <div class="mb-3">
                         <label for="inputName" class="form-label fs-6">Nome</label>
@@ -145,9 +147,9 @@
                     </div>
 
                     <div class="mb-3">
-                        <label for="inputName" class="form-label fs-6">Números</label>
+                        <label class="form-label fs-6">Números</label>
                         <table class="table table-bordered cursor-pointer">
-                            <tbody id="tbodyTicket">
+                            <tbody id="tbodyPlayerTicket">
                                 <!-- <tr>
                                     <td data-value="1" class="p-1 text-center">01</td>
                                     <td data-value="2" class="p-1 text-center">02</td>
@@ -165,7 +167,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button id="btnDelete" type="button" class="btn btn-danger" data-bs-target="#modalDelPlayer" data-bs-toggle="modal">Apagar</button>
+                    <button id="btnPlayerDelete" type="button" class="btn btn-danger" data-bs-target="#modalDelPlayer" data-bs-toggle="modal">Apagar</button>
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
                     <button type="button" class="btn btn-primary" onclick="savePlayer()">Salvar</button>
                 </div>
@@ -215,6 +217,101 @@
         </div>
     </div>
     <!-- / Modal: limpar apostadores -->
+
+
+
+    <!-- Modal: + sorteio -->
+    <div id="modalDraw" class="modal" tabindex="-1">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Sorteio</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <input id="inputDrawId" type="hidden" />
+
+                    <div class="mb-3">
+                        <label for="inputDate" class="form-label fs-6">Data</label>
+                        <input type="text" class="form-control" id="inputDate" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="inputId" class="form-label fs-6">Concurso</label>
+                        <input type="text" class="form-control" id="inputId" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fs-6">Números</label>
+                        <table class="table table-bordered cursor-pointer">
+                            <tbody id="tbodyDrawTicket">
+                                <!-- <tr>
+                                    <td data-value="1" class="p-1 text-center">01</td>
+                                    <td data-value="2" class="p-1 text-center">02</td>
+                                    <td data-value="3" class="p-1 text-center">03</td>
+                                    <td data-value="4" class="p-1 text-center">04</td>
+                                    <td data-value="5" class="p-1 text-center">05</td>
+                                    <td data-value="6" class="p-1 text-center">06</td>
+                                    <td data-value="7" class="p-1 text-center">07</td>
+                                    <td data-value="8" class="p-1 text-center">08</td>
+                                    <td data-value="9" class="p-1 text-center">09</td>
+                                    <td data-value="10" class="p-1 text-center">10</td>
+                                </tr> -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button id="btnDrawDelete" type="button" class="btn btn-danger" data-bs-target="#modalDelDraw" data-bs-toggle="modal">Apagar</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                    <button type="button" class="btn btn-primary" onclick="saveDraw()">Salvar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- / Modal: + sorteio -->
+
+    <!-- Modal: apagar um sorteio -->
+    <div id="modalDelDraw" class="modal" tabindex="-1">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <div class="modal-body">
+                    <h3 class="text-center text-danger">Apagar sorteio</h3>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal" onclick="deleteDraw()">Confirmar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- / Modal: apagar um sorteio -->
+
+    <!-- Modal: limpar sorteios -->
+    <div id="modalDelAllDraws" class="modal" tabindex="-1">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <div class="modal-body">
+                    <h3 class="text-center text-danger">Limpar sorteios</h3>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal" onclick="deleteAllDraws()">Confirmar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- / Modal: limpar sorteios -->
 
 
 

@@ -2,6 +2,11 @@
 // Modal: player.
 let modalPlayer = null
 
+// Modal: sorteio.
+let modalDraw = null
+
+
+
 // Mostrar bilhetes.
 function showTickets() {
     let tbodyTickets = document.querySelector('#tickets')
@@ -74,6 +79,7 @@ function showDraws() {
     data.draws.forEach((draw, i) => {
         // Linha.
         let tr = document.createElement('tr')
+        tr.classList.add('cursor-pointer')
         tr.dataset.id = i
 
         // Data.
@@ -91,17 +97,11 @@ function showDraws() {
             tr.appendChild(tdNum)
         }
 
+        // Evento: clique.
+        tr.addEventListener('click', showModalDraw)
+
         tbodyDraws.appendChild(tr)
     })
-
-    // Contador de sorteios.
-    /*
-    let drawsCount = document.querySelector('#drawsCount')
-    drawsCount.innerHTML = ''
-
-    const textCount = document.createTextNode(data.draws.length)
-    drawsCount.appendChild(textCount)
-    */
 }
 
 
@@ -171,7 +171,7 @@ function showModalPlayer(event) {
     }
 
     // ID.
-    const inputId = document.querySelector('#inputId')
+    const inputId = document.querySelector('#inputPlayerId')
     inputId.value = idPlayer
 
     // Nome.
@@ -179,15 +179,15 @@ function showModalPlayer(event) {
     inputName.value = player.name
 
     // Números.
-    buildTicket()
-    const tbodyTicket = document.querySelector('#tbodyTicket')
+    buildTicket('#tbodyPlayerTicket')
+    const tbodyTicket = document.querySelector('#tbodyPlayerTicket')
     for (let num of player.ticket) {
         const td = tbodyTicket.querySelector(`td[data-value='${num}']`)
         td.classList.add('bg-dark-blue')
     }
 
     // Botão 'Apagar'.
-    const btnDelete = document.querySelector('#btnDelete')
+    const btnDelete = document.querySelector('#btnPlayerDelete')
     btnDelete.classList.remove(idPlayer ? 'd-none' : 'd-block')
     btnDelete.classList.add(idPlayer ? 'd-block' : 'd-none')
 
@@ -196,9 +196,9 @@ function showModalPlayer(event) {
     modalPlayer.show()
 }
 
-// Montar ticket do modal apostador.
-function buildTicket() {
-    const tbodyTicket = document.querySelector('#tbodyTicket')
+// Montar ticket do modal.
+function buildTicket(ticketSelector) {
+    const tbodyTicket = document.querySelector(ticketSelector)
     tbodyTicket.innerHTML = ''
 
     for (let i = 0; i < 80; i++) {
@@ -213,14 +213,10 @@ function buildTicket() {
         const tr = tbodyTicket.querySelector('tr:last-child')
         const num = i + 1
 
-        // DAVI: usar buildCell
-        const newTd = document.createElement('td')
-        newTd.classList.add(...['p-1', 'text-center'])
+        const newTd = buildCell((num < 10 ? '0'+ num : num), ['p-1', 'text-center'])
         newTd.dataset.value = num
         newTd.addEventListener('click', selectTicketNum)
 
-        const newTdText = document.createTextNode(num < 10 ? '0'+ num : num)
-        newTd.appendChild(newTdText)
         tr.appendChild(newTd)
     }
 }
@@ -276,7 +272,7 @@ function savePlayer() {
 
 // Apagar apostador.
 function deletePlayer() {
-    const inputId = document.querySelector('#inputId')
+    const inputId = document.querySelector('#inputPlayerId')
     const idPlayer = inputId.value
     
     data.players.splice(idPlayer, 1)
@@ -286,6 +282,139 @@ function deletePlayer() {
 // Apagar todos os apostadores.
 function deleteAllPlayers() {
     data.players = []
+    main()
+}
+
+
+
+// Mostrar modal sorteio.
+function showModalDraw(event) {
+    const idDraw = event.target.parentElement.dataset.id
+
+    if (idDraw) {
+        showModalDrawData(idDraw, data.draws[idDraw])
+    } else {
+        const xhttp = new XMLHttpRequest()
+        xhttp.onreadystatechange = function() {
+            if (this.readyState == 4) {
+                // GET respondido.
+                draw = {
+                    id: '',
+                    date: '',
+                    numbers: []
+                }
+
+                // Sucesso.
+                if (this.status == 200) {
+                    const dados = JSON.parse(this.responseText)
+                    draw = {
+                        id: dados.concurso,
+                        date: moment(dados.data, 'DD/MM/YYYY').format('YYYY-MM-DD'),
+                        numbers: dados.dezenas
+                    }
+                }
+
+                showModalDrawData(idDraw, draw)
+            }
+        }
+        xhttp.open('GET', 'https://loteriascaixa-api.herokuapp.com/api/quina/latest')
+        xhttp.send()
+    }
+}
+
+// Mostrar modal sorteio: continuação.
+function showModalDrawData(idDraw, draw) {
+    // ID.
+    const inputDrawId = document.querySelector('#inputDrawId')
+    inputDrawId.value = idDraw
+
+    // Data.
+    const inputDate = document.querySelector('#inputDate')
+    inputDate.value = draw.date ? moment(draw.date).format('DD/MM/YYYY') : ''
+
+    // Concurso.
+    const inputId = document.querySelector('#inputId')
+    inputId.value = draw.id
+
+    // Números.
+    buildTicket('#tbodyDrawTicket')
+    const tbodyTicket = document.querySelector('#tbodyDrawTicket')
+    for (let num of draw.numbers) {
+        const td = tbodyTicket.querySelector(`td[data-value='${num}']`)
+        td.classList.add('bg-dark-blue')
+    }
+
+    // Botão 'Apagar'.
+    const btnDelete = document.querySelector('#btnDrawDelete')
+    btnDelete.classList.remove(idDraw ? 'd-none' : 'd-block')
+    btnDelete.classList.add(idDraw ? 'd-block' : 'd-none')
+
+    // Mostrar modal.
+    modalDraw = new bootstrap.Modal('#modalDraw')
+    modalDraw.show()
+}
+
+// Salvar um sorteio.
+function saveDraw() {
+    const draw = {
+        id: '',
+        date: '',
+        numbers: []
+    }
+
+    // ID.
+    const inputDrawId = document.querySelector('#inputDrawId')
+    const idDraw = inputDrawId.value
+
+    // Data.
+    const inputDate = document.querySelector('#inputDate')
+    draw.date = inputDate.value
+
+    // Concurso.
+    const inputId = document.querySelector('#inputId')
+    draw.id = inputId.value
+
+    // Números.
+    const tbodyTicket = document.querySelector('#tbodyDrawTicket')
+    const tdSelecteds = tbodyTicket.querySelectorAll('.bg-dark-blue')
+    for (let tdSelected of tdSelecteds) {
+        draw.numbers.push(parseInt(tdSelected.dataset.value))
+    }
+
+    // Verificar.
+    if (draw.date.trim() == '' || draw.id.trim() == '' || draw.numbers.length != 5) {
+        alert('Preencha uma data, um concurso e 5 números!')
+        return
+    }
+
+    // Ajustar data.
+    draw.date = moment(draw.date, 'DD/MM/YYYY').format('YYYY-MM-DD')
+
+    // Salvar.
+    if (idDraw) {
+        data.draws[idDraw] = draw
+    } else {
+        data.draws.push(draw)
+    }
+
+    modalDraw.hide()
+    main()
+}
+
+
+
+// Apagar sorteio.
+function deleteDraw() {
+    const inputId = document.querySelector('#inputDrawId')
+    const idDraw = inputId.value
+    
+    data.draws.splice(idDraw, 1)
+    main()
+}
+
+// Apagar todos os sorteios.
+function deleteAllDraws() {
+    data.draws = []
     main()
 }
 
@@ -303,5 +432,3 @@ function main() {
     calculateScoredNumbers()
 }
 main()
-
-// DAVI: classificação geral; pdf...
